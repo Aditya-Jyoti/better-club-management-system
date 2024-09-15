@@ -1,0 +1,7 @@
+[project_details]
+prisma_path = "prisma/schema.prisma"
+
+[club_details]
+name = "IEEE Computer Society"
+roles = ["UPPER_MANAGEMENT", "DEPARTMENT_LEADS", "JUNIOR_DEPARTMENT_LEADS", "MEMBER"]
+departments = ["TECHNICAL", "MANAGEMENT", "SOCIAL_MEDIA", "DESIGN"]

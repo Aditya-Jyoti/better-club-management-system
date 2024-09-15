@@ -1,0 +1,23 @@
+generator client {
+    provider  = "prisma-client-py"
+    interface = "asyncio"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum Roles {
+        UPPER_MANAGEMENT
+    DEPARTMENT_LEADS
+    JUNIOR_DEPARTMENT_LEADS
+    MEMBER
+    }
+
+enum Departments {
+        TECHNICAL
+    MANAGEMENT
+    SOCIAL_MEDIA
+    DESIGN
+    }
