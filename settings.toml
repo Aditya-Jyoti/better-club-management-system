@@ -1,5 +1,6 @@
-[project_details]
-prisma_path = "prisma/schema.prisma"
+[auth]
+algorithm = "HS256"
+access_token_expires = 30
 
 [club_details]
 name = "IEEE Computer Society"

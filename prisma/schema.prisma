@@ -1,6 +1,7 @@
 generator client {
-    provider  = "prisma-client-py"
-    interface = "asyncio"
+    provider             = "prisma-client-py"
+    interface            = "asyncio"
+    recursive_type_depth = 5
 }
 
 datasource db {
@@ -8,16 +9,38 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model Auth {
+    id    String @id @default(uuid())
+    email String @unique
+    user  User   @relation(fields: [id], references: [id])
+
+    created_at      DateTime  @default(now())
+    last_login      DateTime?
+    hashed_password String    @unique
+}
+
+model User {
+    id   String @id
+    auth Auth?
+
+    first_name String?
+    last_name  String?
+    phone      String?
+
+    role       Roles?
+    department Departments?
+}
+
 enum Roles {
-        UPPER_MANAGEMENT
+    UPPER_MANAGEMENT
     DEPARTMENT_LEADS
     JUNIOR_DEPARTMENT_LEADS
     MEMBER
-    }
+}
 
 enum Departments {
-        TECHNICAL
+    TECHNICAL
     MANAGEMENT
     SOCIAL_MEDIA
     DESIGN
-    }
+}
