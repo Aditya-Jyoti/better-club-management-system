@@ -10,6 +10,7 @@ class Auth(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     last_login: datetime | None = None
     hashed_password: str
+    scopes: list[str]
 
     class Config:
         from_attributes = True

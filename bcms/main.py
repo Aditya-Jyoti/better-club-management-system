@@ -1,10 +1,9 @@
 import os
 import jwt
 
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, Security, status
 from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 
-from prisma import Prisma
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from uuid import UUID
@@ -12,13 +11,14 @@ from jwt import InvalidTokenError
 from datetime import datetime, timezone
 from pydantic import ValidationError
 
-from bcms.settings import get_settings, get_scopes
+from bcms.settings import get_settings
+from bcms.scopes import get_scopes
+from bcms.database import db
+
 from bcms.models.user import User
 from bcms.models.token import TokenData
 
 from bcms.routes.auth import router as auth_router
-
-from prisma.enums import Roles, Departments
 
 load_dotenv()
 
@@ -26,9 +26,6 @@ load_dotenv()
 AUTH_SECRET_KEY = os.getenv("AUTH_SECRET_KEY")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Scopes
-
-db = Prisma()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login", scopes=get_scopes())
 
 
@@ -45,7 +42,8 @@ app = FastAPI(lifespan=lifespan, title=get_settings()["club_details"]["name"])
 
 
 async def get_current_user(
-    security_scopes: SecurityScopes, token: str = Depends(oauth2_scheme)
+    security_scopes: SecurityScopes,
+    token: str = Depends(oauth2_scheme),
 ) -> User:
 
     if security_scopes.scopes:
@@ -99,6 +97,13 @@ async def get_current_user(
         )
 
     return User.model_validate(user)
+
+
+@app.get("/users/me", response_model=User)
+async def get_user_details(
+    current_user: User = Security(get_current_user, scopes=["user:read"])
+):
+    return current_user
 
 
 @app.get("/")

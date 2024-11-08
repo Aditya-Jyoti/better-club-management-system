@@ -12,23 +12,29 @@ datasource db {
 model Auth {
     id    String @id @default(uuid())
     email String @unique
-    user  User   @relation(fields: [id], references: [id])
+    user  User   @relation(fields: [id, email], references: [id, email])
 
     created_at      DateTime  @default(now())
     last_login      DateTime?
     hashed_password String    @unique
+    scopes          String[]
+
+    @@unique([id, email])
 }
 
 model User {
-    id   String @id
-    auth Auth?
+    id    String @id
+    email String @unique
+    auth  Auth?
 
-    first_name String?
-    last_name  String?
-    phone      String?
+    first_name String
+    last_name  String
+    phone      String
 
-    role       Roles?
-    department Departments?
+    role       Roles
+    department Departments
+
+    @@unique([id, email])
 }
 
 enum Roles {

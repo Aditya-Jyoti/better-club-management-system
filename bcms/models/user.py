@@ -8,14 +8,15 @@ from bcms.models.auth import Auth
 
 class User(BaseModel):
     id: UUID
-    auth: Auth | None = None
+    email: EmailStr
+    auth: Auth | None
 
-    first_name: str | None = None
-    last_name: str | None = None
-    phone: str | None = None
+    first_name: str
+    last_name: str
+    phone: str
 
-    role: Roles | None = None
-    department: Departments | None = None
+    role: Roles
+    department: Departments
 
     class Config:
         from_attributes = True
