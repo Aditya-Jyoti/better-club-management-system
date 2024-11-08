@@ -12,7 +12,7 @@ datasource db {
 model Auth {
     id    String @id @default(uuid())
     email String @unique
-    user  User   @relation(fields: [id, email], references: [id, email])
+    user  User   @relation(fields: [id, email], references: [id, email], onDelete: Cascade)
 
     created_at      DateTime  @default(now())
     last_login      DateTime?
@@ -39,12 +39,13 @@ model User {
 
 enum Roles {
     UPPER_MANAGEMENT
-    DEPARTMENT_LEADS
-    JUNIOR_DEPARTMENT_LEADS
+    DEPARTMENT_LEAD
+    JUNIOR_DEPARTMENT_LEAD
     MEMBER
 }
 
 enum Departments {
+    BOARD
     TECHNICAL
     MANAGEMENT
     SOCIAL_MEDIA
