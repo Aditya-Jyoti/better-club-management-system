@@ -38,7 +38,7 @@ model User {
 }
 
 enum Roles {
-    UPPER_MANAGEMENT
+    BOARD
     DEPARTMENT_LEAD
     JUNIOR_DEPARTMENT_LEAD
     MEMBER

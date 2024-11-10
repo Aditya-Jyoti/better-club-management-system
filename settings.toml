@@ -1,8 +1,0 @@
-[auth]
-algorithm = "HS256"
-access_token_expires = 30
-
-[club_details]
-name = "IEEE Computer Society"
-roles = ["UPPER_MANAGEMENT", "DEPARTMENT_LEAD", "JUNIOR_DEPARTMENT_LEAD", "MEMBER"]
-departments = ["BOARD", "TECHNICAL", "MANAGEMENT", "SOCIAL_MEDIA", "DESIGN"]

@@ -9,7 +9,7 @@ def get_scopes() -> dict[str, str]:
     return {
         "user:read": "Read user information",
         "user:write": "Write/Update user information",
-        "user:delete": "Delete user information",
+        "user:delete": "Delete any user",
         "roles:user:write": "Write/Update a users roles",
         "scopes:user:write": "Write/Update a users scopes",
         "department:user:write": "Write/Update a users department",
@@ -23,7 +23,7 @@ def get_default_scopes(role: Roles) -> list[str]:
         Roles.MEMBER: ["user:read"],
         Roles.JUNIOR_DEPARTMENT_LEAD: ["user:write"],
         Roles.DEPARTMENT_LEAD: ["scopes:user:write"],
-        Roles.UPPER_MANAGEMENT: [
+        Roles.BOARD: [
             "user:delete",
             "roles:user:write",
             "department:user:write",
@@ -38,11 +38,11 @@ def get_default_scopes(role: Roles) -> list[str]:
             Roles.JUNIOR_DEPARTMENT_LEAD,
             Roles.DEPARTMENT_LEAD,
         ],
-        Roles.UPPER_MANAGEMENT: [
+        Roles.BOARD: [
             Roles.MEMBER,
             Roles.JUNIOR_DEPARTMENT_LEAD,
             Roles.DEPARTMENT_LEAD,
-            Roles.UPPER_MANAGEMENT,
+            Roles.BOARD,
         ],
     }
 

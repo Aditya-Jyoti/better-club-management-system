@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Security, HTTPException, Depends
 
 from prisma import Prisma
+from prisma.enums import Departments, Roles
 from uuid import UUID
 
 from bcms.database import get_db
@@ -13,7 +14,20 @@ from bcms.utils.user import get_current_user
 router = APIRouter(prefix="/user", tags=["user"])
 
 
-@router.get("/", response_model=User)
+@router.get("/", response_model=list[User])
+async def get_all(
+    db: Prisma = Depends(get_db),
+    current_user: User = Security(get_current_user, scopes=["user:read"]),
+):
+    all_users = await db.user.find_many()
+
+    if not all_users:
+        raise HTTPException(status_code=404, detail="Users could not found.")
+
+    return all_users
+
+
+@router.get("/me", response_model=User)
 async def get_self(
     current_user: User = Security(get_current_user, scopes=["user:read"])
 ):
@@ -32,6 +46,34 @@ async def get_user(
         raise HTTPException(status_code=404, detail="User not found.")
 
     return user
+
+
+@router.get("/{department}", response_model=list[User])
+async def get_users_by_department(
+    department: Departments,
+    db: Prisma = Depends(get_db),
+    current_user: User = Security(get_current_user, scopes=["user:read"]),
+):
+    all_users = await db.user.find_many(where={"department": department})
+
+    if not all_users:
+        raise HTTPException(status_code=404, detail="Users could not found.")
+
+    return all_users
+
+
+@router.get("/{role}", response_model=list[User])
+async def get_users_by_role(
+    role: Roles,
+    db: Prisma = Depends(get_db),
+    current_user: User = Security(get_current_user, scopes=["user:read"]),
+):
+    all_users = await db.user.find_many(where={"role": role})
+
+    if not all_users:
+        raise HTTPException(status_code=404, detail="Users could not found.")
+
+    return all_users
 
 
 @router.put("/update/{user_id}", response_model=User)

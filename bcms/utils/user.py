@@ -10,7 +10,6 @@ from jwt import InvalidTokenError
 from datetime import datetime, timezone
 from pydantic import ValidationError
 
-from bcms.settings import get_settings
 from bcms.scopes import get_scopes
 from bcms.database import get_db
 
@@ -21,6 +20,7 @@ from bcms.models.token import TokenData
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login", scopes=get_scopes())
 
 AUTH_SECRET_KEY = os.getenv("AUTH_SECRET_KEY")
+ALGORITHM = "HS256"
 
 
 async def get_current_user(
@@ -41,9 +41,7 @@ async def get_current_user(
     )
 
     try:
-        payload = jwt.decode(
-            token, AUTH_SECRET_KEY, algorithms=get_settings()["auth"]["algorithm"]
-        )
+        payload = jwt.decode(token, AUTH_SECRET_KEY, algorithms=[ALGORITHM])
 
         user_id: str = payload.get("user_id")
         email: str = payload.get("email")

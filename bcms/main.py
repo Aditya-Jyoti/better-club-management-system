@@ -1,12 +1,8 @@
-import os
-import jwt
-
 from fastapi import FastAPI
 
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
-from bcms.settings import get_settings
 from bcms.database import db
 
 from bcms.routes.auth import router as auth_router
@@ -24,7 +20,11 @@ async def lifespan(app: FastAPI):
         await db.disconnect()
 
 
-app = FastAPI(lifespan=lifespan, title="Better Club Management System")
+app = FastAPI(
+    lifespan=lifespan,
+    title="Better Club Management System",
+    swagger_ui_parameters={"defaultModelsExpandDepth": -1},
+)
 
 
 @app.get("/")

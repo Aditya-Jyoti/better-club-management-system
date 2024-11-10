@@ -7,7 +7,6 @@ from uuid import uuid4
 
 from bcms.database import get_db, Prisma
 
-from bcms.settings import get_settings
 from bcms.scopes import get_default_scopes
 
 from bcms.models.auth import Auth
@@ -19,6 +18,7 @@ from bcms.utils.password import verify_password, get_password_hash
 from bcms.utils.token import create_access_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+ACCESS_TOKEN_EXPIRY_TIME = 30
 
 
 @router.post("/login", response_model=Token)
@@ -40,9 +40,7 @@ async def login(
         where={"id": auth.id}, data={"last_login": datetime.now(timezone.utc)}
     )
 
-    access_token_expires = timedelta(
-        minutes=get_settings()["auth"]["access_token_expires"]
-    )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRY_TIME)
 
     user_scopes = get_default_scopes(auth.user.role) + form_data.scopes
     access_token = create_access_token(
